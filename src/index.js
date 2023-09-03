@@ -33,7 +33,7 @@ function createCatInfoMarkup(catObj) {
             <p>${catObj.breeds[0].description}</p>
             <p>Temperament: ${catObj.breeds[0].temperament}</p>
           </div>
-          <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="800px"></div>`;
+          <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="650px"></div>`;
 }
 
 //Main code
