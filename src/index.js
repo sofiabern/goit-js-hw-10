@@ -25,12 +25,12 @@ function createSelectMarkup(arr) {
 function createCatInfoMarkup(catObj) {
   refs.loaderEl.classList.replace('loader', 'loader-hidden');
   refs.catEl.classList.replace('cat-info-hidden', 'cat-info');
-  return `<div>
+  return `<div class="cat-box">
             <h1>${catObj.breeds[0].name}</h1>
             <p>${catObj.breeds[0].description}</p>
             <p>Temperament: ${catObj.breeds[0].temperament}</p>
           </div>
-          <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="400px" height="400px"></div>`;
+          <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="800px"></div>`;
 }
 fetchBreeds()
   .then(data => {
