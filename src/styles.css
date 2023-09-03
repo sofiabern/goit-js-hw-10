@@ -1,7 +1,25 @@
 .breed-select {
   display: block;
-}
+  background: white;
+  outline: none;
+  color: grey;
+  border: none;
+  width: 100%;
+  max-width: 580px;
+  overflow-y: scroll;
+  margin: 0 auto;
 
+  padding: 0 20px;
+  font-size: 18px;
+}
+.ss-main {
+  display: flex;
+  flex-direction: row;
+  overflow-y: hidden;
+}
+/* .ss-main .ss-single-selected {
+  height: 50px;
+} */
 .breed-select-hidden {
   display: none;
 }

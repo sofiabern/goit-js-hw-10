@@ -14,7 +14,7 @@ export const fetchBreeds = function () {
 };
 
 export const fetchCatByBreed = function (id) {
-  const params = new URLSearchParams({
+  let params = new URLSearchParams({
     breed_ids: id,
   });
   return axios
