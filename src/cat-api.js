@@ -18,7 +18,7 @@ export const fetchCatByBreed = function (id) {
     breed_ids: id,
   });
   return axios
-    .get(`https://api.thecatapi.com/v1/images/search?breed_ids=${params}`)
+    .get(`https://api.thecatapi.com/v1/images/search?${params}`)
     .then(response => {
       if (!response.data) {
         throw new Error(response.status);
@@ -27,3 +27,7 @@ export const fetchCatByBreed = function (id) {
       }
     });
 };
+// const checkId = 'asho';
+// fetchCatByBreed(checkId).then(resp => {
+//   console.log(resp);
+// });
