@@ -18,12 +18,15 @@ const slim = new SlimSelect({
     contentPosition: 'absolute',
   },
 });
+
+//Markup functions
 function createSelectMarkup(arr) {
   // Опції для SlimSelect
   return arr.map(({ id, name }) => ({ text: name, value: id }));
 }
 function createCatInfoMarkup(catObj) {
   refs.loaderEl.classList.replace('loader', 'loader-hidden');
+  refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
   refs.catEl.classList.replace('cat-info-hidden', 'cat-info');
   return `<div class="cat-box">
             <h1>${catObj.breeds[0].name}</h1>
@@ -32,6 +35,10 @@ function createCatInfoMarkup(catObj) {
           </div>
           <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="800px"></div>`;
 }
+
+//Main code
+refs.selectEl.classList.replace('breed-select', 'breed-select-hidden');
+
 fetchBreeds()
   .then(data => {
     slim.setData(createSelectMarkup(data)); // Встановлюємо опції для SlimSelect
@@ -49,9 +56,12 @@ refs.selectEl.addEventListener('change', showCatHandler);
 function showCatHandler(evt) {
   const catId = refs.selectEl.value;
   if (catId) {
+    refs.catEl.classList.replace('cat-info', 'cat-info-hidden');
+    refs.loaderEl.classList.replace('loader-hidden', 'loader');
     fetchCatByBreed(catId)
       .then(data => {
         refs.catEl.innerHTML = createCatInfoMarkup(data);
+        // refs.loaderEl.classList.replace('loader', 'loader-hidden');
       })
       .catch(error => {
         Swal.fire({
@@ -61,8 +71,6 @@ function showCatHandler(evt) {
         });
       });
   }
-  //   refs.loaderEl.classList.replace('loader-hidden', 'loader');
-  //   refs.catEl.classList.replace('cat-info', 'cat-info-hidden');
 }
 
 showCatHandler();
