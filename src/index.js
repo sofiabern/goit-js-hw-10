@@ -8,7 +8,6 @@ const refs = {
   errorEl: document.querySelector('.error'),
   catEl: document.querySelector('.cat-info'),
 };
-
 const slim = new SlimSelect({
   select: '.breed-select',
   settings: {
@@ -18,18 +17,13 @@ const slim = new SlimSelect({
     showOptionTooltips: true,
   },
 });
-
 function createSelectMarkup(arr) {
-  slim.selectEl.classList.replace('breed-select-hidden', 'breed-select');
-  refs.loaderEl.classList.replace('loader', 'loader-hiden');
-  return arr
-    .map(({ id, name }) => ` <option value="${id}">${name}</option>`)
-    .join('');
+  // Опції для SlimSelect
+  return arr.map(({ id, name }) => ({ text: name, value: id }));
 }
-
 function createCatInfoMarkup(catObj) {
-  refs.loaderEl.classList.replace('loader', 'loader-hiden');
-  refs.catEl.classList.replace('cat-info-hiden', 'cat-info');
+  refs.loaderEl.classList.replace('loader', 'loader-hidden');
+  refs.catEl.classList.replace('cat-info-hidden', 'cat-info');
   return `<div>
             <h1>${catObj.name}</h1>
             <p>${catObj.description}</p>
@@ -37,39 +31,32 @@ function createCatInfoMarkup(catObj) {
           </div>
           <div><img src="${catObj.url}" alt="${catObj.name}" width="400px" height="400px"></div>`;
 }
-
 fetchBreeds()
   .then(data => {
-    slim.selectEl.innerHTML = createSelectMarkup(data);
+    slim.setData(createSelectMarkup(data)); // Встановлюємо опції для SlimSelect
   })
   .catch(error => {
     Swal.fire({
       title: 'Error!',
       text: 'Oops! Something went wrong! Try reloading the page!',
       icon: 'error',
-      // confirmButtonText: 'Cool',
     });
-    refs.loaderEl.classList.replace('loader', 'loader-hiden');
   });
-
-slim.selectEl.addEventListener('change', selectBreedHandler);
-
+refs.selectEl.addEventListener('change', selectBreedHandler);
 function selectBreedHandler(evt) {
-  evt.preventDefault();
-  let cat = slim.selected();
-  fetchCatByBreed(cat)
-    .then(
-      data => (refs.catEl.innerHTML = createCatInfoMarkup(data)),
-      console.log(slim.selectEl.value)
-    )
-    .catch(error => {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Oops! Something went wrong! Try reloading the page!',
-        icon: 'error',
-        // confirmButtonText: 'Cool',
+  const selectedOptions = slim.data.selected();
+  if (selectedOptions && selectedOptions.length > 0) {
+    const selectedCatId = selectedOptions[0].value;
+    fetchCatByBreed(selectedCatId)
+      .then(data => (refs.catEl.innerHTML = createCatInfoMarkup(data)))
+      .catch(error => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Oops! Something went wrong! Try reloading the page!',
+          icon: 'error',
+        });
       });
-    });
-  refs.loaderEl.classList.replace('loader-hiden', 'loader');
-  refs.catEl.classList.replace('cat-info', 'cat-info-hiden');
+  }
+  refs.loaderEl.classList.replace('loader-hidden', 'loader');
+  refs.catEl.classList.replace('cat-info', 'cat-info-hidden');
 }
