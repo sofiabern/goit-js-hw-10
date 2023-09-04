@@ -2,31 +2,33 @@ import { fetchBreeds, fetchCatByBreed } from './cat-api';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
 import Swal from 'sweetalert2';
+
 const refs = {
   selectEl: document.querySelector('.breed-select'),
   loaderEl: document.querySelector('.loader'),
   errorEl: document.querySelector('.error'),
   catEl: document.querySelector('.cat-info'),
 };
+
+// Створення об'єкта SlimSelect
 const slim = new SlimSelect({
   select: '.breed-select',
   settings: {
-    placeholderText: 'Search for pretty cats!',
+    // placeholderText: 'Search for pretty cats!',
     showSearch: false,
     searchHighlight: true,
     showOptionTooltips: false,
     contentPosition: 'absolute',
   },
 });
-
-//Markup functions
+// Функція для створення HTML-коду для опцій селектора
 function createSelectMarkup(arr) {
-  // Опції для SlimSelect
   return arr.map(({ id, name }) => ({ text: name, value: id }));
 }
+// Функція для створення HTML-коду для відображення інформації про котика
 function createCatInfoMarkup(catObj) {
   refs.loaderEl.classList.replace('loader', 'loader-hidden');
-  refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
+
   refs.catEl.classList.replace('cat-info-hidden', 'cat-info');
   return `<div class="cat-box">
             <h1>${catObj.breeds[0].name}</h1>
@@ -35,13 +37,17 @@ function createCatInfoMarkup(catObj) {
           </div>
           <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="650px"></div>`;
 }
-
-//Main code
+let isFirstLoad = true; // ЗМІННА для першого завантаження сторінки
 refs.selectEl.classList.replace('breed-select', 'breed-select-hidden');
-
+// Завантаження списку порід при завантаженні сторінки
 fetchBreeds()
   .then(data => {
-    slim.setData(createSelectMarkup(data)); // Встановлюємо опції для SlimSelect
+    refs.loaderEl.classList.replace('loader-hidden', 'loader');
+
+    slim.setData(createSelectMarkup(data));
+    refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
+    refs.loaderEl.classList.replace('loader', 'loader-hidden');
+    // refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
   })
   .catch(error => {
     Swal.fire({
@@ -52,16 +58,18 @@ fetchBreeds()
   });
 
 refs.selectEl.addEventListener('change', showCatHandler);
-
 function showCatHandler(evt) {
   const catId = refs.selectEl.value;
   if (catId) {
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      return;
+    }
     refs.catEl.classList.replace('cat-info', 'cat-info-hidden');
     refs.loaderEl.classList.replace('loader-hidden', 'loader');
     fetchCatByBreed(catId)
       .then(data => {
         refs.catEl.innerHTML = createCatInfoMarkup(data);
-        // refs.loaderEl.classList.replace('loader', 'loader-hidden');
       })
       .catch(error => {
         Swal.fire({
@@ -72,5 +80,3 @@ function showCatHandler(evt) {
       });
   }
 }
-
-showCatHandler();

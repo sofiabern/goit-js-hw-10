@@ -3,6 +3,10 @@ body {
   background-color: rgb(249, 246, 200);
 }
 
+/* .hidden {
+  display: none;
+} */
+
 h1 {
   font-size: 60px;
   color: #ffb2da;
