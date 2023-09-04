@@ -21,6 +21,7 @@ const slim = new SlimSelect({
     contentPosition: 'absolute',
   },
 });
+slim.selectEl.classList.add('breed-select-hidden');
 refs.selectEl.classList.replace('breed-select', 'breed-select-hidden');
 // Функція для створення HTML-коду для опцій селектора
 function createSelectMarkup(arr) {
@@ -47,6 +48,7 @@ fetchBreeds()
 
     slim.setData(createSelectMarkup(data));
     refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
+    slim.selectEl.classList.remove('breed-select-hidden');
     refs.loaderEl.classList.replace('loader', 'loader-hidden');
   })
   .catch(error => {
