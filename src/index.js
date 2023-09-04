@@ -21,6 +21,7 @@ const slim = new SlimSelect({
     contentPosition: 'absolute',
   },
 });
+refs.selectEl.classList.replace('breed-select', 'breed-select-hidden');
 // Функція для створення HTML-коду для опцій селектора
 function createSelectMarkup(arr) {
   return arr.map(({ id, name }) => ({ text: name, value: id }));
@@ -38,7 +39,7 @@ function createCatInfoMarkup(catObj) {
           <div><img src="${catObj.url}" alt="${catObj.breeds[0].name}" width="650px"></div>`;
 }
 let isFirstLoad = true; // ЗМІННА для першого завантаження сторінки
-refs.selectEl.classList.replace('breed-select', 'breed-select-hidden');
+
 // Завантаження списку порід при завантаженні сторінки
 fetchBreeds()
   .then(data => {
@@ -47,7 +48,6 @@ fetchBreeds()
     slim.setData(createSelectMarkup(data));
     refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
     refs.loaderEl.classList.replace('loader', 'loader-hidden');
-    // refs.selectEl.classList.replace('breed-select-hidden', 'breed-select');
   })
   .catch(error => {
     Swal.fire({
